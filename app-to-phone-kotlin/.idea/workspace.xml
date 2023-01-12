@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d2e4ce66-a5fe-495f-8d6e-a35d9cacdca2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../app-to-app-kotlin/app-to-app/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../app-to-app-kotlin/app-to-app/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app-to-app-kotlin/app-to-app/app/src/main/java/com/vonage/tutorial/apptoapp/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../app-to-app-kotlin/app-to-app/app/src/main/java/com/vonage/tutorial/apptoapp/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app-to-app-kotlin/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../app-to-app-kotlin/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app-to-app-kotlin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../app-to-app-kotlin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app-to-app-kotlin/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app-to-app-kotlin/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-to-phone/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app-to-phone/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-to-phone/app/src/main/java/com/vonage/tutorial/voice/apptophone/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app-to-phone/app/src/main/java/com/vonage/tutorial/voice/apptophone/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../in-app-messaging-java/app/src/main/java/com/vonage/inappmessaging/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../in-app-messaging-java/app/src/main/java/com/vonage/inappmessaging/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../in-app-messaging-kotlin/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../in-app-messaging-kotlin/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../in-app-messaging-kotlin/app/src/main/java/com/vonage/inappmessaging/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../in-app-messaging-kotlin/app/src/main/java/com/vonage/inappmessaging/MainActivity.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="27WU1DIZuiJ83l9kgqlqBnlfGJ7" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d2e4ce66-a5fe-495f-8d6e-a35d9cacdca2" name="Default Changelist" comment="" />
+      <created>1649435119143</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649435119143</updated>
+    </task>
+    <servers />
+  </component>
+</project>
