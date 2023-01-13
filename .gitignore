@@ -7,3 +7,6 @@ Pods
 .gradle
 local.properties
 .idea
+contents.xcworkspacedata
+xcshareddata
+xcuserdata
