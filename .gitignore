@@ -1,0 +1,9 @@
+.nexmo-app
+private.key
+.DS_Store
+node_modules
+build
+Pods
+.gradle
+local.properties
+.idea
