@@ -2,17 +2,14 @@
 
 const subdomain = 'SUBDOMAIN';
 const vonageNumber = 'NUMBER';
-const port = 3000;
 
 const express = require('express');
 const app = express();
-
 app.use(express.json());
 
 app.get('/voice/answer', (req, res) => {
   console.log('NCCO request:');
-  const callee = JSON.parse(req.query.custom_data).callee
-  console.log(`  - callee: ${callee}`);
+  console.log(`  - callee: ${req.query.to}`);
   console.log('---');
   res.json([ 
     { 
@@ -23,7 +20,7 @@ app.get('/voice/answer', (req, res) => {
       "action": "connect",
       "from": vonageNumber,
       "endpoint": [ 
-        { "type": "phone", "number": callee } 
+        { "type": "phone", "number": req.query.to } 
       ]
     }
   ]);
