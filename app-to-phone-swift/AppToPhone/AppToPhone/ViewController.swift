@@ -57,7 +57,7 @@ class ViewController: UIViewController {
     
     func placeCall() {
         callButton.setTitle("End Call", for: .normal)
-        client.serverCall(["callee": "PHONE_NUMBER"]) { error, call in
+        client.serverCall(["to": "PHONE_NUMBER"]) { error, call in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 if error == nil {

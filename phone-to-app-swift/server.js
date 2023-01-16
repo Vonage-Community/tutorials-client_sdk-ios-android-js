@@ -1,11 +1,9 @@
 'use strict';
 
-const port = 3000;
 const subdomain = 'SUBDOMAIN';
 
 const express = require('express')
 const app = express();
-
 app.use(express.json());
 
 app.get('/voice/answer', (req, res) => {

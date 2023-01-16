@@ -70,7 +70,7 @@ class CallViewController: UIViewController {
     @objc private func makeCall() {
         setStatusLabelText("Calling \(user.callPartnerName)")
         
-        client.serverCall(["callee": user.callPartnerName]) { error, call in
+        client.serverCall(["to": user.callPartnerName]) { error, call in
             if error == nil {
                 self.setHangUpButtonHidden(false)
                 self.call = call
