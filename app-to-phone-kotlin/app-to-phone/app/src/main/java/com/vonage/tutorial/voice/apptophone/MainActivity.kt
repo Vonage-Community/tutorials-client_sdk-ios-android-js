@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun startCall() {
-        client.serverCall(mapOf("to" to "+447528640068")) {
+        client.serverCall(mapOf("to" to "PHONE_NUMBER")) {
             err, outboundCall ->
             when {
                 err != null -> {
