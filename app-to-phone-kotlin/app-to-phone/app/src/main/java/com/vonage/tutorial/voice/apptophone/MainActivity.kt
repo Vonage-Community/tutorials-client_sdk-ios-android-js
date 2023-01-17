@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     //Replace this with your generated JWT
     private val aliceJWT = ""
+
     private lateinit var client: VoiceClient
     var onGoingCall: VoiceCall? = null
 
@@ -62,6 +63,10 @@ class MainActivity : AppCompatActivity() {
                     endCallButton.visibility = View.INVISIBLE
                 }
             }
+        }
+
+        client.setOnRTCHangupListener { callId, legId, callQuality ->
+            onGoingCall = null
         }
     }
 
