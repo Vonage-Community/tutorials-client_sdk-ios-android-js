@@ -14,8 +14,10 @@ import com.vonage.voice.api.*
 
 class MainActivity : AppCompatActivity() {
 
+    //Replace this with your generated JWT's
     private val aliceJWT = ""
     private val bobJWT = ""
+
     private lateinit var client: VoiceClient
     private var otherUser: String = ""
     private var onGoingCall: VoiceCall? = null
@@ -58,13 +60,20 @@ class MainActivity : AppCompatActivity() {
         client = VoiceClient(this.application.applicationContext)
         client.setConfig(ClientConfig(ConfigRegion.US))
 
-        client.setCallInviteListener { invite ->
-            callInvite = invite
+        client.setCallInviteListener { callId, voiceInvite ->
+            callInvite = voiceInvite
             runOnUiThread {
                 hideUI()
                 answerCallButton.visibility = View.VISIBLE
                 rejectCallButton.visibility = View.VISIBLE
             }
+        }
+
+        client.setOnRTCHangupListener { callId, legId, callQuality ->
+            onGoingCall = null
+            hideUI()
+            startCallButton.visibility = View.VISIBLE
+            waitingForIncomingCallTextView.visibility = View.VISIBLE
         }
     }
 
@@ -117,7 +126,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun startCall() {
-        client.serverCall(mapOf("callee" to otherUser)) {
+        client.serverCall(mapOf("to" to otherUser)) {
                 err, outboundCall ->
             when {
                 err != null -> {

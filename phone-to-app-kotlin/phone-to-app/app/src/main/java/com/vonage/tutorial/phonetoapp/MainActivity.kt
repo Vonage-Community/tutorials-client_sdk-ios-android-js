@@ -47,13 +47,20 @@ class MainActivity : AppCompatActivity() {
         client.setConfig(ClientConfig(ConfigRegion.US))
 
 
-        client.setCallInviteListener { invite ->
+        client.setCallInviteListener { callId, invite ->
             callInvite = invite
             runOnUiThread {
                 answerCallButton.visibility = View.VISIBLE
                 rejectCallButton.visibility = View.VISIBLE
                 endCallButton.visibility = View.GONE
             }
+        }
+
+        client.setOnRTCHangupListener { callId, legId, callQuality ->
+            onGoingCall = null
+            answerCallButton.visibility = View.GONE
+            rejectCallButton.visibility = View.GONE
+            endCallButton.visibility = View.GONE
         }
 
         client.createSession(aliceJWT) {
