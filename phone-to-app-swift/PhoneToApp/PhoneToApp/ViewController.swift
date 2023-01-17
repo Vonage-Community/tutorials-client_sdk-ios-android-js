@@ -64,21 +64,19 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: VGVoiceClientDelegate {
-    
-    func voiceClient(_ client: VGVoiceClient, didReceive invite: VGVoiceInvite) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: String, with invite: VGVoiceInvite) {
         DispatchQueue.main.async { [weak self] in
             self?.displayIncomingCallAlert(callInvite: invite)
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupFor call: VGVoiceCall, withLegId legId: String, andQuality callQuality: VGRTCQuality) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withLegId legId: String, andQuality callQuality: VGRTCQuality) {
         DispatchQueue.main.async { [weak self] in
             self?.call = nil
             self?.connectionStatusLabel.text = "Call Ended"
         }
     }
     
-    // TODO: should be an enum
     func client(_ client: VGBaseClient, didReceiveSessionErrorWithReason reason: String) {
         DispatchQueue.main.async { [weak self] in
             self?.connectionStatusLabel.text = reason

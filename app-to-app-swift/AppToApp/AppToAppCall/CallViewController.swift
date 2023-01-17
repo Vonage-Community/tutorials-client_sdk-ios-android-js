@@ -145,19 +145,18 @@ class CallViewController: UIViewController {
 }
 
 extension CallViewController: VGVoiceClientDelegate {
-    func voiceClient(_ client: VGVoiceClient, didReceive invite: VGVoiceInvite) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: String, with invite: VGVoiceInvite) {
         DispatchQueue.main.async { [weak self] in
             self?.displayIncomingCallAlert(callInvite: invite)
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupFor call: VGVoiceCall, withLegId legId: String, andQuality callQuality: VGRTCQuality) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withLegId legId: String, andQuality callQuality: VGRTCQuality) {
         self.call = nil
         self.setHangUpButtonHidden(true)
         self.setStatusLabelText("Ready to receive call...")
     }
     
-    // TODO: should be an enum
     func client(_ client: VGBaseClient, didReceiveSessionErrorWithReason reason: String) {
         self.setStatusLabelText(reason)
     }
