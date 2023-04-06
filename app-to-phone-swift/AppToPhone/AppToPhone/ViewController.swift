@@ -6,7 +6,7 @@ class ViewController: UIViewController {
     var connectionStatusLabel = UILabel()
     var callButton = UIButton(type: .roundedRect)
     let client = VGVoiceClient()
-    var call: VGVoiceCall?
+    var callID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         let config = VGClientConfig(region: .US)
         client.setConfig(config)
         
-        client.createSession("ALICE_JWT", sessionId: nil) { error, sessionId in
+        client.createSession("ALICE_JWT") { error, sessionId in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 if error == nil {
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func callButtonPressed(_ sender: Any) {
-        if call == nil {
+        if callID == nil {
             placeCall()
         } else {
             endCall()
@@ -57,11 +57,11 @@ class ViewController: UIViewController {
     
     func placeCall() {
         callButton.setTitle("End Call", for: .normal)
-        client.serverCall(["to": "PHONE_NUMBER"]) { error, call in
+        client.serverCall(["to": "PHONE_NUMBER"]) { error, callId in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 if error == nil {
-                    self.call = call
+                    self.callID = callId
                 } else {
                     self.callButton.setTitle("Call", for: .normal)
                     self.connectionStatusLabel.text = error?.localizedDescription
@@ -71,14 +71,15 @@ class ViewController: UIViewController {
     }
     
     func endCall() {
-        call?.hangup({ error in
+        guard let callID else { return }
+        client.hangup(callID) { error in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 if error == nil {
-                    self.call = nil
+                    self.callID = nil
                     self.callButton.setTitle("Call", for: .normal)
                 }
             }
-        })
+        }
     }
 }

@@ -5,7 +5,7 @@ class ViewController: UIViewController {
     
     let connectionStatusLabel = UILabel()
     let client = VGVoiceClient()
-    var call: VGVoiceCall?
+    var callID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         client.setConfig(config)
         client.delegate = self
         
-        client.createSession("ALICE_JWT", sessionId: nil) { error, sessionId in
+        client.createSession("ALICE_JWT") { error, sessionId in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 if error == nil {
@@ -38,21 +38,19 @@ class ViewController: UIViewController {
         }
     }
     
-    func displayIncomingCallAlert(callInvite: VGVoiceInvite) {
-        let from = callInvite.from.id ?? "Unknown"
-        
-        let alert = UIAlertController(title: "Incoming call from", message: from, preferredStyle: .alert)
+    func displayIncomingCallAlert(callID: String, caller: String) {
+        let alert = UIAlertController(title: "Incoming call from", message: caller, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Answer", style: .default, handler: { _ in
-            callInvite.answer { error, call in
+            self.client.answer(callID) { error in
                 if error == nil {
-                    self.call = call
+                    self.callID = callID
                 }
             }
         }))
         
         alert.addAction(UIAlertAction(title: "Reject", style: .destructive, handler: { _ in
-            callInvite.reject { error in
+            self.client.reject(callID) { error in
                 if let error {
                     self.connectionStatusLabel.text = error.localizedDescription
                 }
@@ -64,22 +62,40 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: VGVoiceClientDelegate {
-    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: String, with invite: VGVoiceInvite) {
+    
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: String, from caller: String, withChannelType type: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.displayIncomingCallAlert(callInvite: invite)
+            self?.displayIncomingCallAlert(callID: callId, caller: caller)
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withLegId legId: String, andQuality callQuality: VGRTCQuality) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteCancelForCall callId: String, with reason: VGVoiceInviteCancelReasonType) {
         DispatchQueue.main.async { [weak self] in
-            self?.call = nil
+            self?.dismiss(animated: true)
+        }
+    }
+    
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality) {
+        DispatchQueue.main.async { [weak self] in
+            self?.callID = nil
             self?.connectionStatusLabel.text = "Call Ended"
         }
     }
     
-    func client(_ client: VGBaseClient, didReceiveSessionErrorWithReason reason: String) {
+    func client(_ client: VGBaseClient, didReceiveSessionErrorWith reason: VGSessionErrorReason) {
+        let reasonString: String!
+        
+        switch reason {
+        case .EXPIRED_TOKEN:
+            reasonString = "Expired Token"
+        case .PING_TIMEOUT, .TRANSPORT_CLOSED:
+            reasonString = "Network Error"
+        @unknown default:
+            reasonString = "Unknown"
+        }
+        
         DispatchQueue.main.async { [weak self] in
-            self?.connectionStatusLabel.text = reason
+            self?.connectionStatusLabel.text = reasonString
         }
     }
 }
