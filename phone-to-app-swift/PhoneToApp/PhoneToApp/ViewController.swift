@@ -75,7 +75,7 @@ extension ViewController: VGVoiceClientDelegate {
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality, isRemote: Bool) {
         DispatchQueue.main.async { [weak self] in
             self?.callID = nil
             self?.connectionStatusLabel.text = "Call Ended"

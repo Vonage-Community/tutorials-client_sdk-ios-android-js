@@ -157,7 +157,7 @@ extension CallViewController: VGVoiceClientDelegate {
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality, isRemote: Bool) {
         self.callID = nil
         self.setHangUpButtonHidden(true)
         self.setStatusLabelText("Ready to receive call...")
