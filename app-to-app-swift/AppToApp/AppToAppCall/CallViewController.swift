@@ -144,8 +144,7 @@ class CallViewController: UIViewController {
 }
 
 extension CallViewController: VGVoiceClientDelegate {
-    
-    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: String, from caller: String, withChannelType type: String) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: VGCallId, from caller: String, with type: VGVoiceChannelType) {
         DispatchQueue.main.async { [weak self] in
             self?.displayIncomingCallAlert(callID: callId, caller: caller)
         }
@@ -167,11 +166,11 @@ extension CallViewController: VGVoiceClientDelegate {
         let reasonString: String!
         
         switch reason {
-        case .EXPIRED_TOKEN:
+        case .tokenExpired:
             reasonString = "Expired Token"
-        case .PING_TIMEOUT, .TRANSPORT_CLOSED:
+        case .pingTimeout, .transportClosed:
             reasonString = "Network Error"
-        @unknown default:
+        default:
             reasonString = "Unknown"
         }
         

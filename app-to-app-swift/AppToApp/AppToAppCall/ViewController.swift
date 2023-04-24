@@ -56,6 +56,7 @@ class ViewController: UIViewController {
     func login() {
         guard let user = self.user else { return }
         let config = VGClientConfig(region: .US)
+        config.enableWebsocketInvites = true
         client.setConfig(config)
         client.createSession(user.jwt) { error, sessionId in
             DispatchQueue.main.async { [weak self] in
