@@ -8,9 +8,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.vonage.voice.api.ClientConfig
-import com.vonage.voice.api.ConfigRegion
-import com.vonage.voice.api.VoiceCall
+import com.vonage.android_core.VGClientConfig
+import com.vonage.clientcore.core.api.ClientConfigRegion
+import com.vonage.voice.api.CallId
 import com.vonage.voice.api.VoiceClient
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private val aliceJWT = ""
 
     private lateinit var client: VoiceClient
-    var onGoingCall: VoiceCall? = null
+    private var onGoingCallID: CallId? = null
 
     private lateinit var startCallButton: Button
     private lateinit var endCallButton: Button
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         client = VoiceClient(this.application.applicationContext)
-        client.setConfig(ClientConfig(ConfigRegion.US))
+        client.setConfig(VGClientConfig(ClientConfigRegion.US))
 
         client.createSession(aliceJWT) {
             err, sessionId ->
@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        client.setOnRTCHangupListener { callId, legId, callQuality ->
-            onGoingCall = null
+        client.setOnCallHangupListener { callId, callQuality, isRemote ->
+            onGoingCallID = null
         }
     }
 
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                     connectionStatusTextView.text = err.localizedMessage
                 }
                 else -> {
-                    onGoingCall = outboundCall
+                    onGoingCallID = outboundCall
                     startCallButton.visibility = View.INVISIBLE
                     endCallButton.visibility = View.VISIBLE
                 }
@@ -89,16 +89,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hangup() {
-        onGoingCall?.hangup() {
-            err ->
-            when {
-                err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
-                }
-                else -> {
-                    onGoingCall = null
+        onGoingCallID?.let {
+            client.hangup(it) {
+                    err ->
+                when {
+                    err != null -> {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
+
+                    else -> {
+                        onGoingCallID = null
+                    }
                 }
             }
         }
+
     }
 }
