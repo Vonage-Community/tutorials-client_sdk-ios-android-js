@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.forEach
+import com.vonage.android_core.VGClientConfig
+import com.vonage.clientcore.core.api.ClientConfigRegion
 import com.vonage.voice.api.*
 
 class MainActivity : AppCompatActivity() {
@@ -20,8 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var client: VoiceClient
     private var otherUser: String = ""
-    private var onGoingCall: VoiceCall? = null
-    private var callInvite: VoiceInvite? = null
+    private var onGoingCallID: CallId? = null
+    private var callInviteID: CallId? = null
 
     private lateinit var connectionStatusTextView: TextView
     private lateinit var waitingForIncomingCallTextView: TextView
@@ -58,10 +60,10 @@ class MainActivity : AppCompatActivity() {
         startCallButton.setOnClickListener { startCall() }
 
         client = VoiceClient(this.application.applicationContext)
-        client.setConfig(ClientConfig(ConfigRegion.US))
+        client.setConfig(VGClientConfig(ClientConfigRegion.US))
 
-        client.setCallInviteListener { callId, voiceInvite ->
-            callInvite = voiceInvite
+        client.setCallInviteListener { callId, from, channelType ->
+            callInviteID = callId
             runOnUiThread {
                 hideUI()
                 answerCallButton.visibility = View.VISIBLE
@@ -69,12 +71,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        client.setOnRTCHangupListener { callId, legId, callQuality ->
-            onGoingCall = null
+        client.setOnCallHangupListener { callId, callQuality, isRemote ->
+            onGoingCallID = null
             hideUI()
             startCallButton.visibility = View.VISIBLE
             waitingForIncomingCallTextView.visibility = View.VISIBLE
         }
+
     }
 
     private fun hideUI() {
@@ -133,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                     connectionStatusTextView.text = err.localizedMessage
                 }
                 else -> {
-                    onGoingCall = outboundCall
+                    onGoingCallID = outboundCall
                     hideUI()
                     endCallButton.visibility = View.VISIBLE
                 }
@@ -144,52 +147,60 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun answerCall() {
-        callInvite?.answer {
-            err, incomingCall ->
-            when {
-                err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
-                }
-                else -> {
-                    onGoingCall = incomingCall
-                    hideUI()
-                    endCallButton.visibility = View.VISIBLE
+        callInviteID?.let {
+            client.answer(it) {
+                err ->
+                when {
+                    err != null -> {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
+
+                    else -> {
+                        onGoingCallID = it
+                        hideUI()
+                        endCallButton.visibility = View.VISIBLE
+                    }
                 }
             }
         }
     }
 
     private fun rejectCall() {
-        callInvite?.reject {
-                err ->
-            when {
-                err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
-                }
-                else -> {
-                    hideUI()
-                    startCallButton.visibility = View.VISIBLE
-                    waitingForIncomingCallTextView.visibility = View.VISIBLE
+        callInviteID?.let {
+            client.reject(it) { err ->
+                when {
+                    err != null -> {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
+
+                    else -> {
+                        hideUI()
+                        startCallButton.visibility = View.VISIBLE
+                        waitingForIncomingCallTextView.visibility = View.VISIBLE
+                    }
                 }
             }
+            onGoingCallID = null
         }
-        onGoingCall = null
     }
 
     private fun endCall() {
-        onGoingCall?.hangup {
-                err ->
-            when {
-                err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
-                }
-                else -> {
-                    hideUI()
-                    startCallButton.visibility = View.VISIBLE
-                    waitingForIncomingCallTextView.visibility = View.VISIBLE
+        onGoingCallID?.let {
+            client.hangup(it) {
+                    err ->
+                when {
+                    err != null -> {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
+
+                    else -> {
+                        hideUI()
+                        startCallButton.visibility = View.VISIBLE
+                        waitingForIncomingCallTextView.visibility = View.VISIBLE
+                    }
                 }
             }
         }
-        onGoingCall = null
+        onGoingCallID = null
     }
 }
