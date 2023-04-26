@@ -47,7 +47,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         client = VoiceClient(this.application.applicationContext)
-        client.setConfig(VGClientConfig(ClientConfigRegion.US))
+        val config = VGClientConfig(ClientConfigRegion.US)
+        config.enableWebsocketInvites = true
+        client.setConfig(config)
 
         client.createSession(aliceJWT) {
             err, sessionId ->
@@ -67,6 +69,8 @@ class MainActivity : AppCompatActivity() {
 
         client.setOnCallHangupListener { callId, callQuality, isRemote ->
             onGoingCallID = null
+            startCallButton.visibility = View.VISIBLE
+            endCallButton.visibility = View.INVISIBLE
         }
     }
 
