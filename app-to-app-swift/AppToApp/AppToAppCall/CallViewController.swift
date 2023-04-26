@@ -10,7 +10,7 @@ class CallViewController: UIViewController {
     let user: User
     let client: VGVoiceClient
     
-    var call: VGVoiceCall?
+    var callID: String?
     
     init(user: User, client: VGVoiceClient) {
         self.user = user
@@ -70,27 +70,25 @@ class CallViewController: UIViewController {
     @objc private func makeCall() {
         setStatusLabelText("Calling \(user.callPartnerName)")
         
-        client.serverCall(["to": user.callPartnerName]) { error, call in
+        client.serverCall(["to": user.callPartnerName]) { error, callId in
             if error == nil {
                 self.setHangUpButtonHidden(false)
-                self.call = call
+                self.callID = callId
             } else {
                 self.setStatusLabelText(error?.localizedDescription)
             }
         }
     }
     
-    func displayIncomingCallAlert(callInvite: VGVoiceInvite) {
-        let from = callInvite.from.id ?? "Unknown"
-        
-        let alert = UIAlertController(title: "Incoming call from", message: from, preferredStyle: .alert)
+    func displayIncomingCallAlert(callID: String, caller: String) {
+        let alert = UIAlertController(title: "Incoming call from", message: caller, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Answer", style: .default, handler: { _ in
-            callInvite.answer { error, call in
+            self.client.answer(callID) { error in
                 if error == nil {
                     self.setHangUpButtonHidden(false)
-                    self.setStatusLabelText("On a call with \(from)")
-                    self.call = call
+                    self.setStatusLabelText("On a call with \(caller)")
+                    self.callID = callID
                 } else {
                     self.setStatusLabelText(error?.localizedDescription)
                 }
@@ -98,7 +96,7 @@ class CallViewController: UIViewController {
         }))
         
         alert.addAction(UIAlertAction(title: "Reject", style: .destructive, handler: { _ in
-            callInvite.reject { error in
+            self.client.reject(callID) { error in
                 if let error {
                     self.setStatusLabelText(error.localizedDescription)
                 }
@@ -109,13 +107,14 @@ class CallViewController: UIViewController {
     }
     
     @objc private func endCall() {
-        call?.hangup({ error in
+        guard let callID else { return }
+        client.hangup(callID) { error in
             if error == nil {
-                self.call = nil
+                self.callID = nil
                 self.setHangUpButtonHidden(true)
                 self.setStatusLabelText("Ready to receive call...")
             }
-        })
+        }
     }
     
     @objc func logout() {
@@ -145,19 +144,36 @@ class CallViewController: UIViewController {
 }
 
 extension CallViewController: VGVoiceClientDelegate {
-    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: String, with invite: VGVoiceInvite) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteForCall callId: VGCallId, from caller: String, with type: VGVoiceChannelType) {
         DispatchQueue.main.async { [weak self] in
-            self?.displayIncomingCallAlert(callInvite: invite)
+            self?.displayIncomingCallAlert(callID: callId, caller: caller)
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withLegId legId: String, andQuality callQuality: VGRTCQuality) {
-        self.call = nil
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteCancelForCall callId: String, with reason: VGVoiceInviteCancelReason) {
+        DispatchQueue.main.async { [weak self] in
+            self?.dismiss(animated: true)
+        }
+    }
+    
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: VGCallId, withQuality callQuality: VGRTCQuality, reason: VGHangupReason) {
+        self.callID = nil
         self.setHangUpButtonHidden(true)
         self.setStatusLabelText("Ready to receive call...")
     }
     
-    func client(_ client: VGBaseClient, didReceiveSessionErrorWithReason reason: String) {
-        self.setStatusLabelText(reason)
+    func client(_ client: VGBaseClient, didReceiveSessionErrorWith reason: VGSessionErrorReason) {
+        let reasonString: String!
+        
+        switch reason {
+        case .tokenExpired:
+            reasonString = "Expired Token"
+        case .pingTimeout, .transportClosed:
+            reasonString = "Network Error"
+        default:
+            reasonString = "Unknown"
+        }
+        
+        self.setStatusLabelText(reasonString)
     }
 }
