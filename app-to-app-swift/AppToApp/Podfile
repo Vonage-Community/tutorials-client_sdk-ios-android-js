@@ -6,5 +6,5 @@ target 'AppToAppCall' do
   use_frameworks!
 
   # Pods for AppToAppCall
-  pod 'VonageClientSDKVoice', '1.0.0-rc.2'
+  pod 'VonageClientSDKVoice', '1.0.0'
 end

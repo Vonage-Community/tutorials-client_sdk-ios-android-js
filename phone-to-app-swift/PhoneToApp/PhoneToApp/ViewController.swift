@@ -69,13 +69,13 @@ extension ViewController: VGVoiceClientDelegate {
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveInviteCancelForCall callId: String, with reason: VGVoiceInviteCancelReasonType) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteCancelForCall callId: String, with reason: VGVoiceInviteCancelReason) {
         DispatchQueue.main.async { [weak self] in
             self?.dismiss(animated: true)
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality, isRemote: Bool) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: VGCallId, withQuality callQuality: VGRTCQuality, reason: VGHangupReason) {
         DispatchQueue.main.async { [weak self] in
             self?.callID = nil
             self?.connectionStatusLabel.text = "Call Ended"

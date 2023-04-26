@@ -150,13 +150,13 @@ extension CallViewController: VGVoiceClientDelegate {
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveInviteCancelForCall callId: String, with reason: VGVoiceInviteCancelReasonType) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveInviteCancelForCall callId: String, with reason: VGVoiceInviteCancelReason) {
         DispatchQueue.main.async { [weak self] in
             self?.dismiss(animated: true)
         }
     }
     
-    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: String, withQuality callQuality: VGRTCQuality, isRemote: Bool) {
+    func voiceClient(_ client: VGVoiceClient, didReceiveHangupForCall callId: VGCallId, withQuality callQuality: VGRTCQuality, reason: VGHangupReason) {
         self.callID = nil
         self.setHangUpButtonHidden(true)
         self.setStatusLabelText("Ready to receive call...")
