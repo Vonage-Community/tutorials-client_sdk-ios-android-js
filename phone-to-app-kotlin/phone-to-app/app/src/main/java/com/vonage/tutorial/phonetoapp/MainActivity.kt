@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
         endCallButton.setOnClickListener { endCall() }
 
         client = VoiceClient(this.application.applicationContext)
-        client.setConfig(VGClientConfig(ClientConfigRegion.US))
+        val config = VGClientConfig(ClientConfigRegion.US)
+        config.enableWebsocketInvites = true
+        client.setConfig(config)
 
         client.setCallInviteListener { callId, from, channelType ->
             callInviteID = callId
