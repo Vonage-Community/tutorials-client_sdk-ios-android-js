@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="./node_modules/@vonage/client-sdk/dist/vonageClientSDK.min.js"></script>
+</head>
+
+<body>
+  <h1>Inbound app call</h1>
+  <p id="notification">Lines are open for calls...</p>
+  <br />
+  <button id="button">Answer</button>
+  <script>
+
+    const token = 'ALICE_JWT';
+    const client = new vonageClientSDK.VonageClient();
+    const config = new vonageClientSDK.ClientConfig(
+      vonageClientSDK.ConfigRegion.US
+    );
+    client.setConfig(config);
+
+    let callId = null;
+    client.createSession(token).then((Session) => {
+      console.log({ Session });
+
+      const answerButton = document.getElementById("button");
+      const notification = document.getElementById("notification");
+
+      client.on('callInvite', (_callId) => {
+        callId = _callId;
+        notification.textContent = "You are receiving a call";
+        // Answer the call.
+        answerButton.addEventListener("click", () => {
+          client.answerCall(callId);
+          notification.textContent = "You are on a call";
+        });
+      });
+
+      client.on('callHangup', (callId, callQuality, reason) => {
+        callId = null;
+        notification.textContent = "Lines are open for calls...";
+      });
+    }).catch((error) => {
+      console.error(error);
+    });
+  </script>
+</body>
+
+</html>

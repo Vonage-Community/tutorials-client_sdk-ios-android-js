@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="./node_modules/@vonage/client-sdk/dist/vonageClientSDK.min.js"></script>
+  <style>
+    input, button {
+      font-size: 1rem;
+    }
+    #hangup {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Call Phone from App</h1>
+  <label for="phone-number">Your Phone Number:</label>
+  <input type="text" name="phone-number" value="" placeholder="i.e. 14155550100" id="phone-number" size="30">
+  <button type="button" id="call">Call</button>
+  <button type="button" id="hangup">Hang Up</button>
+  <div id="status"></div>
+  <script>
+
+    let token = 'ALICE_JWT';
+    const client = new vonageClientSDK.VonageClient();
+    const config = new vonageClientSDK.ClientConfig(
+      vonageClientSDK.ConfigRegion.US
+    );
+    client.setConfig(config);
+
+    let callId = null;
+    client.createSession(token).then((Session) => {
+      console.log({ Session });
+
+      const callButton = document.getElementById("call");
+      const hangUpButton = document.getElementById("hangup");
+      const statusElement = document.getElementById("status");
+
+      callButton.addEventListener("click", event => {
+        let destination = document.getElementById("phone-number").value;
+        if (destination !== "") {
+          client.serverCall({ to: destination }).then((_callId) => {
+            callId = _callId;
+          });
+        } else {
+          statusElement.innerText = 'Please enter your phone number.';
+        }
+      });
+
+      hangUpButton.addEventListener("click", () => {
+        client.hangup(callId).then(() => {
+          callButton.style.display = "inline";
+          hangupButton.style.display = "none";
+        });
+      });
+
+      client.on('legStatusUpdate', (callId, legId, status) => {
+        if (status === vonageClientSDK.LegStatus.ANSWERED) {
+          callButton.style.display = "none";
+          hangUpButton.style.display = "inline";
+        }
+        if (status === vonageClientSDK.LegStatus.COMPLETED) {
+          callButton.style.display = "inline";
+          hangUpButton.style.display = "none";
+        }
+      });
+
+    }).catch((error) => {
+      console.error(error);
+    });
+  </script>
+</body>
+
+</html>

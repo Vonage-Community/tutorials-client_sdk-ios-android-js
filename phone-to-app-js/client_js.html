@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="./node_modules/@vonage/client-sdk/dist/vonageClientSDK.min.js"></script>
+</head>
+
+<body>
+  <h1>Inbound PSTN phone call</h1>
+  <p id="notification">Lines are open for calls...</p>
+  <br />
+  <button type="button" id="answer">Answer</button>
+  <button type="button" id="reject">Reject</button>
+  <button type="button" id="hangup">Hang Up</button>
+
+  <script>
+    let token = 'ALICE_JWT';
+    const client = new vonageClientSDK.VonageClient();
+    const config = new vonageClientSDK.ClientConfig(
+      vonageClientSDK.ConfigRegion.US
+    );
+    client.setConfig(config);
+
+    let callId = null;
+    client.createSession(token).then((Session) => {
+      console.log({ Session });
+
+      const answerButton = document.getElementById("answer");
+      const rejectButton = document.getElementById("reject");
+      const hangUpButton = document.getElementById("hangup");
+      const notification = document.getElementById("notification");
+
+      client.on('callInvite', (_callId) => {
+        callId = _callId;
+        notification.textContent = "You are receiving a call";
+        // Answer the call.
+        answerButton.addEventListener("click", () => {
+          client.answerCall(callId);
+          notification.textContent = "You are on a call";
+        });
+        // Reject the call
+        rejectButton.addEventListener("click", () => {
+          client.rejectCall(callId);
+          notification.textContent = `You rejected the call`;
+        });
+        // Hang-up the call
+        hangUpButton.addEventListener("click", () => {
+          client.hangup(callId);
+          notification.textContent = `You ended the call`;
+        });
+      });
+
+      client.on('legStatusUpdate', (callId, legId, status) => {
+        notification.textContent = `Caller Leg Status is: ${status}`;
+      });
+    }).catch((error) => {
+      console.error(error);
+    });
+  </script>
+</body>
+
+</html>
