@@ -22,7 +22,7 @@
   <div id="status"></div>
   <script>
 
-    let token = 'ALICE_JWT';
+    let token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2ODk4NjY0NDgsImp0aSI6IjAxN2I1MDEwLTI3MTEtMTFlZS05MGIyLTY5MmYzODUyODUxMSIsImFwcGxpY2F0aW9uX2lkIjoiY2E5OTYxZDQtMjg5Yi00ZjEwLTg2YTUtNjM1Nzk0OWJjMDE3Iiwic3ViIjoiQWxpY2UiLCJleHAiOjE2ODk4NjY0NzAzODUsImFjbCI6eyJwYXRocyI6eyIvKi91c2Vycy8qKiI6e30sIi8qL2NvbnZlcnNhdGlvbnMvKioiOnt9LCIvKi9zZXNzaW9ucy8qKiI6e30sIi8qL2RldmljZXMvKioiOnt9LCIvKi9pbWFnZS8qKiI6e30sIi8qL21lZGlhLyoqIjp7fSwiLyovYXBwbGljYXRpb25zLyoqIjp7fSwiLyovcHVzaC8qKiI6e30sIi8qL2tub2NraW5nLyoqIjp7fSwiLyovbGVncy8qKiI6e319fX0.U5vQ29d2id24kdBxDZE9gXjZwNfjNMGCb4vGVFuQe_16S8p5rHkilgfk5lil6d7FTTBgaaFePFjB2_2DgRJCcP_d3uoDPE87hEDHIx0SAHTIH0PxKCs5msQ4IekfxhMx5lsTkYQLV4T0RRaI46v4d8fO_gKC6FT3dEto0UKT6N9qkUbYtsURqSSKAwcuUCCh-PjvTnhXzVeCQB1bb0HoTr9kAsoXfidRbKtCtQIaw2zLKTkM9Vh31rMp8ZewrM6b-4bl0LXD18ADXNw4Xng5ifgs0929yQiqCy_m45rKpV3lXb9zt4BckXnkATkBthZ5r8RPBB58k3eiKI06kX26zg';
     const client = new vonageClientSDK.VonageClient();
     const config = new vonageClientSDK.ClientConfig(
       vonageClientSDK.ConfigRegion.US
@@ -30,8 +30,8 @@
     client.setConfig(config);
 
     let callId = null;
-    client.createSession(token).then((Session) => {
-      console.log({ Session });
+    client.createSession(token).then((session) => {
+      console.log({ session });
 
       const callButton = document.getElementById("call");
       const hangUpButton = document.getElementById("hangup");

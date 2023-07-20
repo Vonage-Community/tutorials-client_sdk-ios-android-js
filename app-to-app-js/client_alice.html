@@ -19,8 +19,8 @@
     client.setConfig(config);
 
     let callId = null;
-    client.createSession(token).then((Session) => {
-      console.log({ Session });
+    client.createSession(token).then((session) => {
+      console.log({ session });
 
       const callButton = document.getElementById("call");
       const hangUpButton = document.getElementById("hangup");
