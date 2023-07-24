@@ -1,6 +1,7 @@
 'use strict';
 
 const subdomain = 'SUBDOMAIN';
+const vonageNumber = 'NUMBER';
 
 const express = require('express')
 const app = express();
@@ -8,29 +9,21 @@ app.use(express.json());
 
 app.get('/voice/answer', (req, res) => {
   console.log('NCCO request:');
-  console.log(`  - caller: ${req.query.from_user}`);
   console.log(`  - callee: ${req.query.to}`);
   console.log('---');
-  let ncco = [{"action": "talk", "text": "No destination user - hanging up"}];
-  const username = req.query.to;
-  if (username) {
-    ncco = [
-      {
-        "action": "talk",
-        "text": "Connecting you to " + username
-      },
-      {
-        "action": "connect",
-        "endpoint": [
-          {
-            "type": "app",
-            "user": username
-          }
-        ]
-      }
-    ]
-  }
-  res.json(ncco);
+  res.json([ 
+    { 
+      "action": "talk", 
+      "text": "Please wait while we connect you."
+    },
+    { 
+      "action": "connect",
+      "from": vonageNumber,
+      "endpoint": [ 
+        { "type": "phone", "number": req.query.to } 
+      ]
+    }
+  ]);
 });
 
 app.all('/voice/event', (req, res) => {
@@ -42,6 +35,10 @@ app.all('/voice/event', (req, res) => {
 
 if(subdomain == "SUBDOMAIN") {
   console.log('\n\t🚨🚨🚨 Please change the SUBDOMAIN value');
+  return false;
+}
+if(vonageNumber == "NUMBER") {
+  console.log('\n\t🚨🚨🚨 Please change the NUMBER value');
   return false;
 }
 app.listen(3000);

@@ -8,29 +8,22 @@ app.use(express.json());
 
 app.get('/voice/answer', (req, res) => {
   console.log('NCCO request:');
-  console.log(`  - caller: ${req.query.from_user}`);
+  console.log(`  - caller: ${req.query.from}`);
   console.log(`  - callee: ${req.query.to}`);
   console.log('---');
-  let ncco = [{"action": "talk", "text": "No destination user - hanging up"}];
-  const username = req.query.to;
-  if (username) {
-    ncco = [
-      {
-        "action": "talk",
-        "text": "Connecting you to " + username
-      },
-      {
-        "action": "connect",
-        "endpoint": [
-          {
-            "type": "app",
-            "user": username
-          }
-        ]
-      }
-    ]
-  }
-  res.json(ncco);
+  res.json([ 
+    { 
+      "action": "talk", 
+      "text": "Please wait while we connect you."
+    },
+    { 
+      "action": "connect", 
+      "from": req.query.from,
+      "endpoint": [ 
+        { "type": "app", "user": "Alice" } 
+      ]
+    }
+  ]);
 });
 
 app.all('/voice/event', (req, res) => {

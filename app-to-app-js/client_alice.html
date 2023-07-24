@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="./node_modules/@vonage/client-sdk/dist/vonageClientSDK.min.js"></script>
+</head>
+
+<body>
+  <h1>Outbound App Call (Alice)</h1>
+  <button type="button" id="call">Call</button>
+  <button type="button" id="hangup">Hang Up</button>
+  <script>
+
+    const token = 'ALICE_JWT';
+    const client = new vonageClientSDK.VonageClient();
+    const config = new vonageClientSDK.ClientConfig(
+      vonageClientSDK.ConfigRegion.US
+    );
+    client.setConfig(config);
+
+    let callId = null;
+    client.createSession(token).then((sessionId) => {
+      console.log(sessionId);
+
+      const callButton = document.getElementById("call");
+      const hangUpButton = document.getElementById("hangup");
+
+      callButton.addEventListener("click", () => {
+        console.log("Calling Bob...");
+        client.serverCall({ to: 'Bob' }).then((_callId) => {
+          callId = _callId;
+        });
+      });
+
+      hangUpButton.addEventListener("click", () => {
+        console.log("Hanging up...");
+        client.hangup(callId);
+      });
+
+    }).catch((error) => {
+      console.error(error);
+    });
+  </script>
+</body>
+
+</html>
