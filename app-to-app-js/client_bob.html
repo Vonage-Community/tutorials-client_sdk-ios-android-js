@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <h1>Inbound app call</h1>
+  <h1>Inbound App Call (Bob)</h1>
   <p id="notification">Lines are open for calls...</p>
   <br />
   <button id="button">Answer</button>
@@ -20,8 +20,8 @@
     client.setConfig(config);
 
     let callId = null;
-    client.createSession(token).then((session) => {
-      console.log({ session });
+    client.createSession(token).then((sessionId) => {
+      console.log(sessionId);
 
       const answerButton = document.getElementById("button");
       const notification = document.getElementById("notification");

@@ -22,8 +22,8 @@
     client.setConfig(config);
 
     let callId = null;
-    client.createSession(token).then((session) => {
-      console.log({ session });
+    client.createSession(token).then((sessionId) => {
+      console.log(sessionId);
 
       const answerButton = document.getElementById("answer");
       const rejectButton = document.getElementById("reject");

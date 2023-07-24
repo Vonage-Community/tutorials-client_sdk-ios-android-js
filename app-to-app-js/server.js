@@ -11,8 +11,8 @@ app.get('/voice/answer', (req, res) => {
   console.log(`  - caller: ${req.query.from}`);
   console.log(`  - callee: ${req.query.to}`);
   console.log('---');
-  var ncco = [{"action": "talk", "text": "No destination user - hanging up"}];
-  var username = req.query.to;
+  let ncco = [{"action": "talk", "text": "No destination user - hanging up"}];
+  const username = req.query.to;
   if (username) {
     ncco = [
       {

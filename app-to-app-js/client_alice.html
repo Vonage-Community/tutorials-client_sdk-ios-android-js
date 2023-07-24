@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <h1>App from App Call (Alice)</h1>
+  <h1>Outbound App Call (Alice)</h1>
   <button type="button" id="call">Call</button>
   <button type="button" id="hangup">Hang Up</button>
   <script>
@@ -19,8 +19,8 @@
     client.setConfig(config);
 
     let callId = null;
-    client.createSession(token).then((session) => {
-      console.log({ session });
+    client.createSession(token).then((sessionId) => {
+      console.log(sessionId);
 
       const callButton = document.getElementById("call");
       const hangUpButton = document.getElementById("hangup");
