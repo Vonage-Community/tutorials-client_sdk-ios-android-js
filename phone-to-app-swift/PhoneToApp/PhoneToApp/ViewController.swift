@@ -22,6 +22,7 @@ class ViewController: UIViewController {
             connectionStatusLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
+        VGVoiceClient.isUsingCallKit = false
         let config = VGClientConfig(region: .US)
         config.enableWebsocketInvites = true
         client.setConfig(config)

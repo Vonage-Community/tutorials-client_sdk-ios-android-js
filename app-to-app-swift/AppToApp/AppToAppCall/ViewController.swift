@@ -55,6 +55,8 @@ class ViewController: UIViewController {
     
     func login() {
         guard let user = self.user else { return }
+        
+        VGVoiceClient.isUsingCallKit = false
         let config = VGClientConfig(region: .US)
         config.enableWebsocketInvites = true
         client.setConfig(config)

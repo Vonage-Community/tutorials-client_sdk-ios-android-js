@@ -31,6 +31,7 @@ class ViewController: UIViewController {
             callButton.topAnchor.constraint(equalTo: connectionStatusLabel.bottomAnchor, constant: 24)
         ])
         
+        VGVoiceClient.isUsingCallKit = false
         let config = VGClientConfig(region: .US)
         client.setConfig(config)
         
