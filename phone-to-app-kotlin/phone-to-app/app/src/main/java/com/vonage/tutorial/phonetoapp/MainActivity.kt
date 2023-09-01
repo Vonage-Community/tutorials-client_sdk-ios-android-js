@@ -61,19 +61,25 @@ class MainActivity : AppCompatActivity() {
 
         client.setOnCallHangupListener { callId, callQuality, isRemote ->
             onGoingCallID = null
-            answerCallButton.visibility = View.GONE
-            rejectCallButton.visibility = View.GONE
-            endCallButton.visibility = View.GONE
+            runOnUiThread {
+                answerCallButton.visibility = View.GONE
+                rejectCallButton.visibility = View.GONE
+                endCallButton.visibility = View.GONE
+            }
         }
 
         client.createSession(aliceJWT) {
                 err, sessionId ->
             when {
                 err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
+                    runOnUiThread {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
                 }
                 else -> {
-                    connectionStatusTextView.text = "Connected"
+                    runOnUiThread {
+                        connectionStatusTextView.text = "Connected"
+                    }
                 }
             }
         }
@@ -86,14 +92,18 @@ class MainActivity : AppCompatActivity() {
                     err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
                         onGoingCallID = it
-                        answerCallButton.visibility = View.GONE
-                        rejectCallButton.visibility = View.GONE
-                        endCallButton.visibility = View.VISIBLE
+                        runOnUiThread {
+                            answerCallButton.visibility = View.GONE
+                            rejectCallButton.visibility = View.GONE
+                            endCallButton.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -105,13 +115,17 @@ class MainActivity : AppCompatActivity() {
             client.reject(it) { err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
-                        answerCallButton.visibility = View.GONE
-                        rejectCallButton.visibility = View.GONE
-                        endCallButton.visibility = View.GONE
+                        runOnUiThread {
+                            answerCallButton.visibility = View.GONE
+                            rejectCallButton.visibility = View.GONE
+                            endCallButton.visibility = View.GONE
+                        }
                     }
                 }
             }
@@ -125,13 +139,17 @@ class MainActivity : AppCompatActivity() {
                     err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
-                        answerCallButton.visibility = View.GONE
-                        rejectCallButton.visibility = View.GONE
-                        endCallButton.visibility = View.GONE
+                        runOnUiThread {
+                            answerCallButton.visibility = View.GONE
+                            rejectCallButton.visibility = View.GONE
+                            endCallButton.visibility = View.GONE
+                        }
                     }
                 }
             }

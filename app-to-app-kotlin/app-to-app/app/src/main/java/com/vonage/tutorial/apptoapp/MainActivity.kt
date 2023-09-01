@@ -75,9 +75,11 @@ class MainActivity : AppCompatActivity() {
 
         client.setOnCallHangupListener { callId, callQuality, isRemote ->
             onGoingCallID = null
-            hideUI()
-            startCallButton.visibility = View.VISIBLE
-            waitingForIncomingCallTextView.visibility = View.VISIBLE
+            runOnUiThread {
+                hideUI()
+                startCallButton.visibility = View.VISIBLE
+                waitingForIncomingCallTextView.visibility = View.VISIBLE
+            }
         }
 
     }
@@ -93,16 +95,20 @@ class MainActivity : AppCompatActivity() {
                 err, sessionId ->
             when {
                 err != null -> {
-                    hideUI()
-                    connectionStatusTextView.visibility = View.VISIBLE
-                    connectionStatusTextView.text = err.localizedMessage
+                    runOnUiThread {
+                        hideUI()
+                        connectionStatusTextView.visibility = View.VISIBLE
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
                 }
                 else -> {
-                    hideUI()
-                    connectionStatusTextView.visibility = View.VISIBLE
-                    connectionStatusTextView.text = "Connected"
-                    startCallButton.visibility = View.VISIBLE
-                    waitingForIncomingCallTextView.visibility = View.VISIBLE
+                    runOnUiThread {
+                        hideUI()
+                        connectionStatusTextView.visibility = View.VISIBLE
+                        connectionStatusTextView.text = "Connected"
+                        startCallButton.visibility = View.VISIBLE
+                        waitingForIncomingCallTextView.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -114,16 +120,20 @@ class MainActivity : AppCompatActivity() {
                 err, sessionId ->
             when {
                 err != null -> {
-                    hideUI()
-                    connectionStatusTextView.visibility = View.VISIBLE
-                    connectionStatusTextView.text = err.localizedMessage
+                    runOnUiThread {
+                        hideUI()
+                        connectionStatusTextView.visibility = View.VISIBLE
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
                 }
                 else -> {
-                    hideUI()
-                    connectionStatusTextView.visibility = View.VISIBLE
-                    connectionStatusTextView.text = "Connected"
-                    startCallButton.visibility = View.VISIBLE
-                    waitingForIncomingCallTextView.visibility = View.VISIBLE
+                    runOnUiThread {
+                        hideUI()
+                        connectionStatusTextView.visibility = View.VISIBLE
+                        connectionStatusTextView.text = "Connected"
+                        startCallButton.visibility = View.VISIBLE
+                        waitingForIncomingCallTextView.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -135,12 +145,16 @@ class MainActivity : AppCompatActivity() {
                 err, outboundCall ->
             when {
                 err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
+                    runOnUiThread {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
                 }
                 else -> {
                     onGoingCallID = outboundCall
-                    hideUI()
-                    endCallButton.visibility = View.VISIBLE
+                    runOnUiThread {
+                        hideUI()
+                        endCallButton.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -154,13 +168,17 @@ class MainActivity : AppCompatActivity() {
                 err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
                         onGoingCallID = it
-                        hideUI()
-                        endCallButton.visibility = View.VISIBLE
+                        runOnUiThread {
+                            hideUI()
+                            endCallButton.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -172,13 +190,17 @@ class MainActivity : AppCompatActivity() {
             client.reject(it) { err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
                         hideUI()
-                        startCallButton.visibility = View.VISIBLE
-                        waitingForIncomingCallTextView.visibility = View.VISIBLE
+                        runOnUiThread {
+                            startCallButton.visibility = View.VISIBLE
+                            waitingForIncomingCallTextView.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -192,13 +214,17 @@ class MainActivity : AppCompatActivity() {
                     err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
-                        hideUI()
-                        startCallButton.visibility = View.VISIBLE
-                        waitingForIncomingCallTextView.visibility = View.VISIBLE
+                        runOnUiThread {
+                            hideUI()
+                            startCallButton.visibility = View.VISIBLE
+                            waitingForIncomingCallTextView.visibility = View.VISIBLE
+                        }
                     }
                 }
             }

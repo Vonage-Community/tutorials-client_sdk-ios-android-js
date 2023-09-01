@@ -55,22 +55,28 @@ class MainActivity : AppCompatActivity() {
             err, sessionId ->
             when {
                 err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
-                    startCallButton.visibility = View.INVISIBLE
-                    endCallButton.visibility = View.INVISIBLE
+                    runOnUiThread {
+                        connectionStatusTextView.text = err.localizedMessage
+                        startCallButton.visibility = View.INVISIBLE
+                        endCallButton.visibility = View.INVISIBLE
+                    }
                 }
                 else -> {
-                    connectionStatusTextView.text = "Connected"
-                    startCallButton.visibility = View.VISIBLE
-                    endCallButton.visibility = View.INVISIBLE
+                    runOnUiThread {
+                        connectionStatusTextView.text = "Connected"
+                        startCallButton.visibility = View.VISIBLE
+                        endCallButton.visibility = View.INVISIBLE
+                    }
                 }
             }
         }
 
         client.setOnCallHangupListener { callId, callQuality, isRemote ->
             onGoingCallID = null
-            startCallButton.visibility = View.VISIBLE
-            endCallButton.visibility = View.INVISIBLE
+            runOnUiThread {
+                startCallButton.visibility = View.VISIBLE
+                endCallButton.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -80,12 +86,16 @@ class MainActivity : AppCompatActivity() {
             err, outboundCall ->
             when {
                 err != null -> {
-                    connectionStatusTextView.text = err.localizedMessage
+                    runOnUiThread {
+                        connectionStatusTextView.text = err.localizedMessage
+                    }
                 }
                 else -> {
                     onGoingCallID = outboundCall
-                    startCallButton.visibility = View.INVISIBLE
-                    endCallButton.visibility = View.VISIBLE
+                    runOnUiThread {
+                        startCallButton.visibility = View.INVISIBLE
+                        endCallButton.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -98,7 +108,9 @@ class MainActivity : AppCompatActivity() {
                     err ->
                 when {
                     err != null -> {
-                        connectionStatusTextView.text = err.localizedMessage
+                        runOnUiThread {
+                            connectionStatusTextView.text = err.localizedMessage
+                        }
                     }
 
                     else -> {
