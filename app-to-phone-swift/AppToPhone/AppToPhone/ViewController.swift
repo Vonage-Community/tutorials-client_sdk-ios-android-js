@@ -32,9 +32,6 @@ class ViewController: UIViewController {
         ])
         
         VGVoiceClient.isUsingCallKit = false
-        let config = VGClientConfig(region: .US)
-        client.setConfig(config)
-        
         client.createSession("ALICE_JWT") { error, sessionId in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
