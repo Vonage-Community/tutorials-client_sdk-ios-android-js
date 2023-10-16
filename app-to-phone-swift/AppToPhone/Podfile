@@ -6,6 +6,6 @@ target 'AppToPhone' do
   use_frameworks!
 
   # Pods for AppToPhone
-  pod 'VonageClientSDKVoice', '1.1.2'
+  pod 'VonageClientSDKVoice', '1.2.1'
 
 end
