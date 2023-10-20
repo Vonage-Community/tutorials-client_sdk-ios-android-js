@@ -3,6 +3,14 @@
 
 <head>
   <script src="./node_modules/@vonage/client-sdk/dist/vonageClientSDK.min.js"></script>
+  <style>
+    input, button {
+      font-size: 1rem;
+    }
+    #answer, #reject, #hangup {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,47 +22,84 @@
   <button type="button" id="hangup">Hang Up</button>
 
   <script>
-    let token = 'ALICE_JWT';
+    const answerButton = document.getElementById("answer");
+    const rejectButton = document.getElementById("reject");
+    const hangUpButton = document.getElementById("hangup");
+    const notification = document.getElementById("notification");
+    const token = 'ALICE_JWT';
     const client = new vonageClientSDK.VonageClient();
-    const config = new vonageClientSDK.ClientConfig(
-      vonageClientSDK.ConfigRegion.US
-    );
-    client.setConfig(config);
-
     let callId = null;
-    client.createSession(token).then((sessionId) => {
-      console.log(sessionId);
 
-      const answerButton = document.getElementById("answer");
-      const rejectButton = document.getElementById("reject");
-      const hangUpButton = document.getElementById("hangup");
-      const notification = document.getElementById("notification");
+    client.createSession(token)
+      .then(sessionId => {
+        console.log("Id of created session: ", sessionId);
+      })
+      .catch(error  => { 
+        console.error("Error creating session: ", error);
+      });
 
-      client.on('callInvite', (_callId) => {
-        callId = _callId;
-        notification.textContent = "You are receiving a call";
-        // Answer the call.
-        answerButton.addEventListener("click", () => {
-          client.answerCall(callId);
+    client.on('callInvite', (_callId) => {
+      callId = _callId;
+      notification.textContent = "You are receiving a call";
+      answerButton.style.display = "inline";
+      rejectButton.style.display = "inline";
+    });
+
+    client.on('legStatusUpdate', (_callId, legId, status) => {
+      notification.textContent = `Caller Leg Status is: ${status}`;
+    });
+
+    client.on("callHangup", (_callId, callQuality, reason) => {
+      console.log(`Call ${_callId} has hung up, callQuality:${callQuality}, reason:${reason.name}`);
+      callId = null;
+      notification.textContent = "Lines are open for calls...";
+      answerButton.style.display = "none";
+      rejectButton.style.display = "none";
+      hangUpButton.style.display = "none";
+    });
+
+    // Answer the call.
+    answerButton.addEventListener("click", () => {
+      client.answer(callId)
+        .then(() => {
+          console.log("Success answering call.");
           notification.textContent = "You are on a call";
-        });
-        // Reject the call
-        rejectButton.addEventListener("click", () => {
-          client.rejectCall(callId);
-          notification.textContent = `You rejected the call`;
-        });
-        // Hang-up the call
-        hangUpButton.addEventListener("click", () => {
-          client.hangup(callId);
-          notification.textContent = `You ended the call`;
-        });
-      });
+          answerButton.style.display = "none";
+          rejectButton.style.display = "none";
+          hangUpButton.style.display = "inline";
+        })
+        .catch(error => {
+          console.error("Error answering call: ", error);
+        });    
+    });
 
-      client.on('legStatusUpdate', (callId, legId, status) => {
-        notification.textContent = `Caller Leg Status is: ${status}`;
-      });
-    }).catch((error) => {
-      console.error(error);
+    // Reject the call
+    rejectButton.addEventListener("click", () => {
+      client.reject(callId)
+        .then(() => {
+          console.log("Success rejecting call.");
+          notification.textContent = "You rejected the call";
+          answerButton.style.display = "none";
+          rejectButton.style.display = "none";
+        })
+        .catch(error => {
+          console.error("Error rejecting call: ", error);
+        });          
+    });
+
+    // Hang up the call
+    hangUpButton.addEventListener("click", () => {
+      client.hangup(callId)
+        .then(() => {
+          console.log("Success hanging up call.");
+          notification.textContent = "You ended the call";
+          answerButton.style.display = "none";
+          rejectButton.style.display = "none";
+          hangUpButton.style.display = "none";
+        })
+        .catch(error => {
+          console.error("Error hanging up call: ", error);
+        });                
     });
   </script>
 </body>
