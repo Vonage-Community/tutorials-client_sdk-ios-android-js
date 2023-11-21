@@ -7,7 +7,7 @@
     input, button {
       font-size: 1rem;
     }
-    #hangup {
+    #call, #hangup {
       display: none;
     }
   </style>
@@ -20,54 +20,60 @@
   <button type="button" id="call">Call</button>
   <button type="button" id="hangup">Hang Up</button>
   <div id="status"></div>
+  
   <script>
-
-    let token = 'ALICE_JWT';
+    const callButton = document.getElementById("call");
+    const hangUpButton = document.getElementById("hangup");
+    const statusElement = document.getElementById("status");
+    const token = 'ALICE_JWT';
     const client = new vonageClientSDK.VonageClient();
-    const config = new vonageClientSDK.ClientConfig(
-      vonageClientSDK.ConfigRegion.US
-    );
-    client.setConfig(config);
-
     let callId = null;
-    client.createSession(token).then((sessionId) => {
-      console.log(sessionId);
 
-      const callButton = document.getElementById("call");
-      const hangUpButton = document.getElementById("hangup");
-      const statusElement = document.getElementById("status");
+    client.createSession(token)
+      .then((sessionId) => {
+        console.log("Id of created session: ", sessionId);
+        callButton.style.display = "inline";
+      })
+      .catch((error) => {
+        console.error("Error creating session: ", error);
+      });
 
-      callButton.addEventListener("click", event => {
-        let destination = document.getElementById("phone-number").value;
-        if (destination !== "") {
-          client.serverCall({ to: destination }).then((_callId) => {
+    client.on('legStatusUpdate', (callId, legId, status) => {
+      if (status.name === "ANSWERED") {
+        callButton.style.display = "none";
+        hangUpButton.style.display = "inline";
+      }
+      if (status.name === "COMPLETED") {
+        callId = null;
+        callButton.style.display = "inline";
+        hangUpButton.style.display = "none";
+      }
+    });
+
+    callButton.addEventListener("click", event => {
+      const destination = document.getElementById("phone-number").value;
+      if (destination !== "") {
+        client.serverCall({ to: destination })
+          .then((_callId) => {
             callId = _callId;
+          })
+          .catch((error)=>{
+            console.error(`Error making call: ${error}`);
           });
-        } else {
-          statusElement.innerText = 'Please enter your phone number.';
-        }
-      });
+      } else {
+        statusElement.innerText = 'Please enter your phone number.';
+      }
+    });
 
-      hangUpButton.addEventListener("click", () => {
-        client.hangup(callId).then(() => {
-          callButton.style.display = "inline";
+    hangUpButton.addEventListener("click", () => {
+      client.hangup(callId)
+        .then(() => {
           hangupButton.style.display = "none";
-        });
-      });
-
-      client.on('legStatusUpdate', (callId, legId, status) => {
-        if (status === vonageClientSDK.LegStatus.ANSWERED) {
-          callButton.style.display = "none";
-          hangUpButton.style.display = "inline";
-        }
-        if (status === vonageClientSDK.LegStatus.COMPLETED) {
           callButton.style.display = "inline";
-          hangUpButton.style.display = "none";
-        }
-      });
-
-    }).catch((error) => {
-      console.error(error);
+        })
+        .catch(error => {
+          console.error("Error hanging up call: ", error);
+        });                
     });
   </script>
 </body>

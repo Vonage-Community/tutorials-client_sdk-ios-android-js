@@ -12,6 +12,6 @@
   "dependencies": {
     "express": "4.18.2",
     "localtunnel": "2.0.2",
-    "@vonage/client-sdk": "1.0.3"
+    "@vonage/client-sdk": "1.*"
   }
 }
