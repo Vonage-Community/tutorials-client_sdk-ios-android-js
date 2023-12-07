@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,8 +34,13 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
 import com.vonage.android_core.VGError
 import com.vonage.chat.ChatClient
@@ -105,17 +112,19 @@ fun ChatScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
-        if (vm.events.isEmpty()){
-            CircularProgressIndicator(
-                modifier = Modifier.width(64.dp).height(300.dp),
-                color = MaterialTheme.colorScheme.secondary,
-            )
-        } else {
-            LazyColumn() {
-                items(vm.events) { event ->
-                    val (text, isUser) = vm.generateDisplayedText(event)
-                    Text(text)
-                }
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items(vm.events) { event ->
+                val (text, isUser) = vm.generateDisplayedText(event)
+                val textAlightment = if (isUser) TextAlign.Right else TextAlign.Left
+                val textColor = if (isUser) Color.Blue else Color.Black
+                Text(
+                    text = text,
+                    fontSize = 20.sp,
+                    textAlign = textAlightment,
+                    color = textColor
+                )
             }
         }
         Row(){
