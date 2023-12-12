@@ -1,0 +1,16 @@
+PODS:
+  - VonageClientSDKChat (1.3.0)
+
+DEPENDENCIES:
+  - VonageClientSDKChat (= 1.3.0)
+
+SPEC REPOS:
+  trunk:
+    - VonageClientSDKChat
+
+SPEC CHECKSUMS:
+  VonageClientSDKChat: b07a5321f40e294801e8de2d7d67601c9876d05e
+
+PODFILE CHECKSUM: 1ad07ce299f76f6288ff23b295ec0c90e4c022f7
+
+COCOAPODS: 1.14.2
