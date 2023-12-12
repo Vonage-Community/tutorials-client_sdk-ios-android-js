@@ -14,20 +14,21 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                TextField("Token", text: $loginModel.jwt)
-                    .textFieldStyle(.roundedBorder)
-                Button("Login") {
+                Button("Login as Alice") {
                     Task {
-                        await loginModel.login()
+                        await loginModel.login("Alice")
+                    }
+                }.buttonStyle(.bordered)
+                Button("Login as Bob") {
+                    Task {
+                        await loginModel.login("Bob")
                     }
                 }.buttonStyle(.bordered)
             }
             .padding()
             .navigationDestination(isPresented: $loginModel.isLoggedIn) {
-                if let client = loginModel.client {
-                    let chatViewModel = ChatViewModel(client: client)
-                    ChatView(chatViewModel: chatViewModel)
-                }
+                let chatViewModel = ChatViewModel(client: loginModel.client)
+                ChatView(chatViewModel: chatViewModel)
             }
         }.alert(isPresented: $loginModel.isError) {
             Alert(title: Text(loginModel.error))
@@ -37,20 +38,19 @@ struct ContentView: View {
 
 @MainActor
 final class LoginViewModel: ObservableObject {
-    @Published var jwt = ""
     @Published var error = ""
     @Published var isError = false
     @Published var isLoggedIn = false
-    var client: VGChatClient?
     
-    func login() async {
-//        VGBaseClient.setDefaultLoggingLevel(.verbose)
-        let config = VGClientConfig(region: .US)
-        client = VGChatClient()
-        client?.setConfig(config)
-        
+    private let aliceJwt = "ALICE_JWT"
+    private let bobJwt = "BOB_JWT"
+    
+    let client = VGChatClient()
+    
+    func login(_ username: String) async {
         do {
-            let _ = try await client?.createSession(jwt)
+            let jwt = username == "Alice" ? aliceJwt : bobJwt
+            try await client.createSession(jwt)
             isLoggedIn = true
         } catch {
             self.error = error.localizedDescription
