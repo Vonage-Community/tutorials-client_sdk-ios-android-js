@@ -70,7 +70,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application = a
     }
 
     suspend fun getConversationEvents(){
-        val params = GetConversationEventsParameters(PresentingOrder.ASC,100)
+        val params = GetConversationEventsParameters(PresentingOrder.ASC, 100)
         try {
             val eventsPage = client.getConversationEvents(conversationID, params)
             events.clear()
