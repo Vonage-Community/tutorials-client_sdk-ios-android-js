@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                font: 13px Helvetica, Arial;
+            }
+
+            button {
+                cursor: pointer;
+            }
+
+            #login {
+                width: 100%;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #message-textarea {
+                width: 85%;
+                font-size: 20px;
+            }
+
+            #messages {
+                display: none;
+            }
+
+            #message-feed {
+                font-size: 18px;
+                padding-bottom: 20px;
+                line-height: 22pt;
+                height: 300px;
+                overflow-y: auto;
+            }
+
+            #send {
+                width: 85%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <section id="login">
+            <button id="alice-login">Log in as Alice</button>
+            <br /><br />
+            <button id="bob-login">Log in as Bob</button>
+        </section>
+
+        <section id="messages">
+            <div id="message-feed"></div>
+            <div>
+            <textarea id="message-textarea"></textarea>
+            <button id="send">Send</button>
+            </div>
+        </section>
+
+        <script src="./node_modules/@vonage/client-sdk/dist/vonageClientSDK.min.js"></script>
+        <script src="./chat.js"></script>
+    </body>
+</html>

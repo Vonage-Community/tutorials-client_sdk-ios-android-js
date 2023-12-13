@@ -1,0 +1,14 @@
+{
+  "name": "messaging-js",
+  "version": "1.0.0",
+  "description": "Tutorial Chat application using Vonage Client SDK",
+  "main": "chat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vonage/client-sdk": "^1.3.0"
+  }
+}
