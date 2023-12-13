@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "start": "sirv --dev",
     "@vonage/client-sdk": "^1.3.0"
+  },
+  "devDependencies": {
+    "sirv-cli": "^2.0.2"
   }
 }
