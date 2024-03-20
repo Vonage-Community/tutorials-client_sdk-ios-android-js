@@ -50,7 +50,7 @@
     });
 
     client.on("callHangup", (_callId, callQuality, reason) => {
-      console.log(`Call ${_callId} has hung up, callQuality:${callQuality}, reason:${reason.name}`);
+      console.log(`Call ${_callId} has hung up, callQuality:${callQuality}, reason:${reason}`);
       callId = null;
       notification.textContent = "Lines are open for calls...";
       answerButton.style.display = "none";
