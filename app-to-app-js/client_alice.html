@@ -35,11 +35,11 @@
       });
 
     client.on('legStatusUpdate', (callId, legId, status) => {
-      if (status.name === "ANSWERED") {
+      if (status === "ANSWERED") {
         callButton.style.display = "none";
         hangUpButton.style.display = "inline";
       }
-      if (status.name === "COMPLETED") {
+      if (status === "COMPLETED") {
         callButton.style.display = "inline";
         hangUpButton.style.display = "none";
       }
