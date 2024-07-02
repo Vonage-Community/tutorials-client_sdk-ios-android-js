@@ -60,7 +60,7 @@
       console.log("Hanging up...");
       client.hangup(callId)
         .then(() => {
-          hangupButton.style.display = "none";
+          hangUpButton.style.display = "none";
           callButton.style.display = "inline";
         })
         .catch(error => {
